@@ -1,10 +1,13 @@
 #include "semaphores.h"
 
-int available_spaces = NUM_SPACES;
+sem_t parking_semaphore;
+double wait_times[NUM_CARS];
 
 int main(void){
     srand(time(NULL));
+    sem_init(&parking_semaphore, 0, NUM_SPACES);
     parking();
+    sem_destroy(&parking_semaphore);
     return 0;
 }
 
@@ -12,8 +15,6 @@ void parking(void){
     pthread_t threads[NUM_CARS];
     int ids[NUM_CARS];
 
-    int total_parked = 0;
-    double total_wait = 0.0;
 
     printf("Parqueo abierto\n");
 
@@ -21,8 +22,6 @@ void parking(void){
     {
         ids[i] = i;
         pthread_create(&threads[i], NULL, cars, &ids[i]);
-        total_parked++;
-        total_wait += 0.0;
     }
 
     for (int i = 0; i < NUM_CARS; i++)
@@ -30,9 +29,15 @@ void parking(void){
         pthread_join(threads[i], NULL);
     }
 
+    double total_wait = 0.0;
+    for (int i = 0; i < NUM_CARS; i++) {
+        total_wait += wait_times[i];
+    }
 
-    printf("\nTotal cars parked: %d\n", total_parked);
-    printf("Average wait time: %.2f seconds\n", total_wait / total_parked);
+
+
+    printf("\nTotal cars parked: %d\n", NUM_CARS);
+    printf("Average wait time: %.2f seconds\n", total_wait / NUM_CARS);
 }
 
 void *cars(void *arg){
