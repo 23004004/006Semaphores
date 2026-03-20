@@ -2,10 +2,15 @@
 
 sem_t parking_semaphore;
 double wait_times[NUM_CARS];
+int spaces[NUM_SPACES];
+int waiting[NUM_CARS];
+int waiting_count = 0;
 
 int main(void){
     srand(time(NULL));
     sem_init(&parking_semaphore, 0, NUM_SPACES);
+    for (int i = 0; i < NUM_SPACES; i++) spaces[i] = -1;
+    for (int i = 0; i < NUM_CARS; i++) waiting[i] = -1;
     parking();
     sem_destroy(&parking_semaphore);
     return 0;

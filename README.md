@@ -40,7 +40,7 @@ Varios carros intentan estacionarse en un espacio limitado si no hay lugar a esp
 ## Compilación y ejecución
 
 ```bash
-gcc main.c functions.c -o a -lpthread
+gcc main.c semaphores.c -o a -lpthread
 ./a
 ```
 
